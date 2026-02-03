@@ -1,4 +1,4 @@
-const https = require("https");
+import https from "https";
 
 const BOT_TOKEN = "8393639404:AAH55cq_l0QD04L3HxstSdhyn5tvmdgzciw";
 const CHAT_ID = "1302602654";
