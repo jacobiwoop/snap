@@ -3,10 +3,12 @@ FROM node:18-alpine as builder
 
 WORKDIR /app
 
-COPY package*.json ./
+# Copy package.json from the snap-location subdirectory
+COPY snap-location/package*.json ./
 RUN npm install
 
-COPY . .
+# Copy the rest of the application code
+COPY snap-location/ .
 RUN npm run build
 
 # Stage 2: Serve with Nginx
@@ -14,9 +16,6 @@ FROM nginx:alpine
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
-
-# Copy custom nginx config if needed (optional, using default for now)
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
