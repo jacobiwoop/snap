@@ -3,12 +3,12 @@ FROM node:18-alpine as builder
 
 WORKDIR /app
 
-# Copy package.json from the snap-location subdirectory
-COPY snap-location/package*.json ./
+# Copy package.json from the root
+COPY package*.json ./
 RUN npm install
 
 # Copy the rest of the application code
-COPY snap-location/ .
+COPY . .
 RUN npm run build
 
 # Stage 2: Serve with Nginx

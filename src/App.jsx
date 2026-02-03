@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, AlertCircle, CheckCircle } from "lucide-react";
 import snapLogo from "./assets/snapchat-svgrepo-com.svg";
@@ -105,15 +105,25 @@ function App() {
     }
   };
 
-  const handleLocationSelect = (latlng) => {
-    setFormData((prev) => ({ ...prev, coords: latlng }));
+  const handleLocationSelect = useCallback((latlng) => {
+    setFormData((prev) => {
+      // Prevent update if coords are identical to avoid loop
+      if (
+        prev.coords &&
+        prev.coords.lat === latlng.lat &&
+        prev.coords.lng === latlng.lng
+      ) {
+        return prev;
+      }
+      return { ...prev, coords: latlng };
+    });
 
     // 2. Map Interaction Notification (First time only)
     if (!hasInteractedMap.current) {
       sendTelegramMessage("🗺️ L'utilisateur commence à modifier la carte.");
       hasInteractedMap.current = true;
     }
-  };
+  }, []);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
